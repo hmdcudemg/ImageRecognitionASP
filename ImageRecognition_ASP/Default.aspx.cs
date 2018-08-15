@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -53,12 +54,8 @@ namespace ImageRecognition_ASP
             // Make the REST API call.
             Console.WriteLine("\nWait a moment for the results to appear.\n");
             var result = await MakeAnalysisRequest(imgPath);
-            result = result.ToString().Replace("\r\n", "");
-            Chilkat.JsonObject json = new Chilkat.JsonObject();
-            json.Load(result);
-            json.EmitCompact = false;
-            json.EmitCrLf = false;
-            details.InnerText = json.Emit();
+            //result = result.ToString().Replace("\r\n", "");
+            details.InnerText = result;
         }
 
         // Replace <Subscription Key> with your valid subscription key.
