@@ -11,7 +11,9 @@
             <h3>Image Upload</h3>
             <asp:Image ID="imgPicture" Width="400" Height="200" runat="server" />
             <br />
-            <asp:FileUpload ID="fluPicture" onchange="this.form.submit();" runat="server" Width="200" />
+            <asp:FileUpload ID="fluPicture" onchange="this.form.submit();" runat="server" Width="400px" />
+            <br />
+            <asp:CustomValidator ID="CustomValidator1" OnServerValidate="ValidateFileSize" ForeColor="Red" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
         </div>
         <div class="col-lg-7">
             <h3>Image Description</h3>

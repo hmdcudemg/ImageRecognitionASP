@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace ImageRecognition_ASP
 {
@@ -16,7 +17,14 @@ namespace ImageRecognition_ASP
         {
             if (fluPicture.PostedFile != null && fluPicture.PostedFile.ContentLength > 0)
             {
-                UpLoadAndDisplay();
+                if (IsValid())
+                {
+                    UpLoadAndDisplay();
+                }
+                else
+                {
+                    CustomValidator1.IsValid = false;
+                }
             }
             else
             {
@@ -33,7 +41,6 @@ namespace ImageRecognition_ASP
         {
             string imgName = fluPicture.FileName;
             string imgPath = "images/" + imgName;
-            int imgSize = fluPicture.PostedFile.ContentLength;
             if (fluPicture.PostedFile != null && fluPicture.PostedFile.FileName != "")
             {
 
@@ -46,6 +53,25 @@ namespace ImageRecognition_ASP
             else
             {
                 Console.WriteLine("\nInvalid file path");
+            }
+        }
+
+        protected void ValidateFileSize(object sender, ServerValidateEventArgs e)
+        {
+            e.IsValid = IsValid();
+        }
+
+        private bool IsValid()
+        {
+            decimal size = Math.Round(((decimal)fluPicture.PostedFile.ContentLength / (decimal)1024), 2);
+            if (size > 4096)
+            {
+                CustomValidator1.ErrorMessage = "File size must not exceed 4MB.";
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
