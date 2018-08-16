@@ -3,6 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="jumbotron">
+        <center><img src="favicon.ico" width="100" /></center>
         <center><h1>Welcome to Image Recognition</h1></center>
     </div>
 
