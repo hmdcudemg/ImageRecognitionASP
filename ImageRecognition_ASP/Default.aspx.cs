@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -15,26 +16,56 @@ namespace ImageRecognition_ASP
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (fluPicture.PostedFile != null && fluPicture.PostedFile.ContentLength > 0)
+            if (!String.IsNullOrEmpty(txbURL.Text))
             {
-                if (IsValid())
+                Uri uriResult;
+                string filename = "";
+                bool result = Uri.TryCreate(txbURL.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                if (uriResult != null && result)
                 {
-                    UpLoadAndDisplay();
+                    filename = System.IO.Path.GetFileName(uriResult.LocalPath);
                 }
-                else
-                {
-                    CustomValidator1.IsValid = false;
-                }
+                GetImageURL(uriResult, filename);
             }
             else
             {
-                System.IO.DirectoryInfo di = new DirectoryInfo(Server.MapPath("\\images"));
-
-                foreach (FileInfo file in di.GetFiles())
+                btnUpload.Attributes.Add("onclick", "document.getElementById('" + fluPicture.ClientID + "').click();");
+                if (fluPicture.PostedFile != null && fluPicture.PostedFile.ContentLength > 0)
                 {
-                    file.Delete();
+                    if (IsValid())
+                    {
+                        UpLoadAndDisplay();
+                    }
+                    else
+                    {
+                        CustomValidator1.IsValid = false;
+                    }
+                }
+                else
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(Server.MapPath("\\images"));
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
                 }
             }
+        }
+
+        private void GetImageURL(Uri uri, string filename)
+        {
+            using (WebClient webClient = new WebClient())
+            {
+                webClient.DownloadFile(uri, Server.MapPath("/images/" + filename));
+            }
+
+            imgPicture.ImageUrl = "~/images/" + filename;
+            Label1.Text = filename;
+
+            txbURL.Text = "";
+
+            Run("images/" + filename);
         }
 
         private void UpLoadAndDisplay()
@@ -46,6 +77,8 @@ namespace ImageRecognition_ASP
 
                 fluPicture.SaveAs(Server.MapPath(imgPath));
                 imgPicture.ImageUrl = "~/" + imgPath;
+                Label1.Text = imgName;
+                txbURL.Text = "";
 
                 Run(imgPath);
 
@@ -67,6 +100,11 @@ namespace ImageRecognition_ASP
             if (size > 4096)
             {
                 CustomValidator1.ErrorMessage = "File size must not exceed 4MB.";
+                imgPicture.ImageUrl = "";
+                txbURL.Text = "";
+                details.InnerText = "";
+                Label1.Text = "";
+                Label2.Text = "";
                 return false;
             }
             else
@@ -82,6 +120,10 @@ namespace ImageRecognition_ASP
             var result = await MakeAnalysisRequest(imgPath);
             //result = result.ToString().Replace("\r\n", "");
             details.InnerText = result;
+            var obj = JObject.Parse(result);
+            var arr = obj["description"]["captions"];
+            var obj2 = JObject.Parse(arr[0].ToString());
+            Label2.Text = obj2["text"].ToString();
         }
 
         // Replace <Subscription Key> with your valid subscription key.

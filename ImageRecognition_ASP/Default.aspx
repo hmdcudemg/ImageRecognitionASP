@@ -8,15 +8,36 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <h3>Image Upload</h3>
-            <asp:Image ID="imgPicture" Width="400" Height="200" runat="server" />
+            <asp:Image ID="imgPicture" Width="100%" Height="300" runat="server" />
             <br />
-            <asp:FileUpload ID="fluPicture" onchange="this.form.submit();" runat="server" Width="400px" />
+            <asp:Label ID="Label2" CssClass="text-primary" runat="server" Text=""></asp:Label>
+            <br />
+            <asp:Label ID="Label1" CssClass="text-info" runat="server" Text=""></asp:Label>
+            <br />
+            <br />
+            <asp:FileUpload ID="fluPicture" Style="display: none;" onchange="this.form.submit();" runat="server" Width="400px" />
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="input-group mb-3">
+                        <asp:TextBox ID="txbURL" type="text" class="form-control" placeholder="Image URL" aria-label="Image URL" aria-describedby="button-addon2" onchange="this.form.submit();" runat="server" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="button-addon2">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <button id="btnUpload" class="btn btn-primary" type="button" runat="server" style="width: 100%;">
+                        <img src="Content/img/upload-icon.png" height="20" />
+                        Browse
+                    </button>
+                </div>
+            </div>
             <br />
             <asp:CustomValidator ID="CustomValidator1" OnServerValidate="ValidateFileSize" ForeColor="Red" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <h3>Image Description</h3>
             <pre><code id="details" runat="server"></code></pre>
         </div>
