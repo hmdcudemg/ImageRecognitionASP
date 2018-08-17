@@ -32,7 +32,7 @@ namespace ImageRecognition_ASP
                 btnUpload.Attributes.Add("onclick", "document.getElementById('" + fluPicture.ClientID + "').click();");
                 if (fluPicture.PostedFile != null && fluPicture.PostedFile.ContentLength > 0)
                 {
-                    if (IsValid())
+                    if (IsValidPath())
                     {
                         UpLoadAndDisplay();
                     }
@@ -91,10 +91,10 @@ namespace ImageRecognition_ASP
 
         protected void ValidateFileSize(object sender, ServerValidateEventArgs e)
         {
-            e.IsValid = IsValid();
+            e.IsValid = IsValidPath();
         }
 
-        private bool IsValid()
+        private bool IsValidPath()
         {
             decimal size = Math.Round(((decimal)fluPicture.PostedFile.ContentLength / (decimal)1024), 2);
             if (size > 4096)
@@ -118,7 +118,6 @@ namespace ImageRecognition_ASP
             // Make the REST API call.
             Console.WriteLine("\nWait a moment for the results to appear.\n");
             var result = await MakeAnalysisRequest(imgPath);
-            //result = result.ToString().Replace("\r\n", "");
             details.InnerText = result;
             var obj = JObject.Parse(result);
             var arr = obj["description"]["captions"];
@@ -137,8 +136,7 @@ namespace ImageRecognition_ASP
         // Free trial subscription keys are generated in the westcentralus region.
         // If you use a free trial subscription key, you shouldn't need to change
         // this region.
-        const string uriBase =
-        "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/analyze";
+        const string uriBase = "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/analyze";
 
         /// <summary>
         /// Gets the analysis of the specified image file by using
@@ -166,7 +164,6 @@ namespace ImageRecognition_ASP
 
                 // Request body. Posts a locally stored JPEG image.
                 byte[] byteData = System.IO.File.ReadAllBytes(HttpContext.Current.Server.MapPath(imageFilePath));
-                //byte[] byteData = GetImageAsByteArray(imageFilePath);
 
                 using (ByteArrayContent content = new ByteArrayContent(byteData))
                 {
@@ -188,7 +185,7 @@ namespace ImageRecognition_ASP
             }
             catch (Exception e)
             {
-                return "Error getting description";
+                return "Error getting description, " + e.Message;
             }
         }
     }
