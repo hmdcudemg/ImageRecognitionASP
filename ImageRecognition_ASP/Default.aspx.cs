@@ -153,7 +153,7 @@ namespace ImageRecognition_ASP
         // this region.
         static List<string> uriBases = new List<string>(new string[] { "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/analyze", "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr" });
         // Request parameters. A third optional parameter is "details".
-        static List<string> requestParameters = new List<string>(new string[] { "visualFeatures=Categories,Description,Color", "language=en&detectOrientation=true" });
+        static List<string> requestParameters = new List<string>(new string[] { "visualFeatures=Categories,Tags,Description,Faces,Imagetype,Color,Adult", "language=unk&detectOrientation=true" });
 
         /// <summary>
         /// Gets the analysis of the specified image file by using
