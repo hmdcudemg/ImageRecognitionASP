@@ -76,12 +76,21 @@ namespace ImageRecognition_ASP {
         protected global::System.Web.UI.WebControls.CustomValidator CustomValidator1;
         
         /// <summary>
-        /// details control.
+        /// jsonDetails control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl details;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl jsonDetails;
+        
+        /// <summary>
+        /// jsonOCR control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl jsonOCR;
     }
 }

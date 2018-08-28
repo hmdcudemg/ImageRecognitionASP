@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -101,7 +102,8 @@ namespace ImageRecognition_ASP
                 CustomValidator1.ErrorMessage = "File size must not exceed 4MB.";
                 imgPicture.ImageUrl = "";
                 txbURL.Text = "";
-                details.InnerText = "";
+                jsonDetails.InnerText = "";
+                jsonOCR.InnerText = "";
                 Label1.Text = "";
                 Label2.Text = "";
                 return false;
@@ -116,12 +118,19 @@ namespace ImageRecognition_ASP
         {
             // Make the REST API call.
             Console.WriteLine("\nWait a moment for the results to appear.\n");
-            var result = await MakeAnalysisRequest(imgPath);
-            details.InnerText = result;
-            var obj = JObject.Parse(result);
-            var arr = obj["description"]["captions"];
+            List<string> result = new List<string>();
+
+            foreach (string uriBase in uriBases)
+            {
+                result.Add(await MakeAnalysisRequest(imgPath, uriBase, requestParameters[uriBases.IndexOf(uriBase)]));
+            }
+
+            jsonDetails.InnerText = result[0];
+            jsonOCR.InnerText = result[1];
+            var obj = JObject.Parse(result[0]);
             try
             {
+                var arr = obj["description"]["captions"];
                 var obj2 = JObject.Parse(arr[0].ToString());
                 Label2.Text = obj2["text"].ToString();
             }
@@ -142,14 +151,16 @@ namespace ImageRecognition_ASP
         // Free trial subscription keys are generated in the westcentralus region.
         // If you use a free trial subscription key, you shouldn't need to change
         // this region.
-        const string uriBase = "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/analyze";
+        static List<string> uriBases = new List<string>(new string[] { "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/analyze", "https://southcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr" });
+        // Request parameters. A third optional parameter is "details".
+        static List<string> requestParameters = new List<string>(new string[] { "visualFeatures=Categories,Description,Color", "language=en&detectOrientation=true" });
 
         /// <summary>
         /// Gets the analysis of the specified image file by using
         /// the Computer Vision REST API.
         /// </summary>
         /// <param name="imageFilePath">The image file to analyze.</param>
-        static async Task<string> MakeAnalysisRequest(string imageFilePath)
+        static async Task<string> MakeAnalysisRequest(string imageFilePath, string uriBase, string requestParameters)
         {
             try
             {
@@ -158,10 +169,6 @@ namespace ImageRecognition_ASP
                 // Request headers.
                 client.DefaultRequestHeaders.Add(
                     "Ocp-Apim-Subscription-Key", subscriptionKey);
-
-                // Request parameters. A third optional parameter is "details".
-                string requestParameters =
-                    "visualFeatures=Categories,Description,Color";
 
                 // Assemble the URI for the REST API Call.
                 string uri = uriBase + "?" + requestParameters;

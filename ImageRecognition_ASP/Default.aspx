@@ -3,6 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="row" style="margin-top: 20px;">
+        <div class="col-lg-3"></div>
         <div class="col-lg-6">
             <div class="card border-primary mb-6">
                 <div class="card-header">Image Upload</div>
@@ -31,19 +32,28 @@
                             </button>
                         </div>
                     </div>
-                    <br />
                     <asp:CustomValidator ID="CustomValidator1" OnServerValidate="ValidateFileSize" ForeColor="Red" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card border-primary mb-6" style="max-height: 565px; height: 565px;">
+                <div class="card-header">Image Description</div>
+                <div class="card-body">
+                    <pre style="max-height: 450px;"><code class="text-info" id="jsonDetails" runat="server"></code></pre>
                 </div>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="card border-primary mb-6" style="max-height: 565px; height: 565px;">
-                <div class="card-header">Image Description</div>
+                <div class="card-header">Text Recognition</div>
                 <div class="card-body">
-                    <pre style="max-height: 450px;"><code class="text-info" id="details" runat="server"></code></pre>
+                    <pre style="max-height: 450px;"><code class="text-info" id="jsonOCR" runat="server"></code></pre>
                 </div>
             </div>
-
         </div>
     </div>
 
