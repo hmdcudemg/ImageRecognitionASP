@@ -120,8 +120,15 @@ namespace ImageRecognition_ASP
             details.InnerText = result;
             var obj = JObject.Parse(result);
             var arr = obj["description"]["captions"];
-            var obj2 = JObject.Parse(arr[0].ToString());
-            Label2.Text = obj2["text"].ToString();
+            try
+            {
+                var obj2 = JObject.Parse(arr[0].ToString());
+                Label2.Text = obj2["text"].ToString();
+            }
+            catch (Exception)
+            {
+                Label2.Text = "Description not found!.";
+            }
         }
 
         // Replace <Subscription Key> with your valid subscription key.
