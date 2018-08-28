@@ -15,7 +15,7 @@
                     <asp:Label ID="Label1" CssClass="text-info" runat="server" Text=""></asp:Label>
                     <br />
                     <br />
-                    <asp:FileUpload ID="fluPicture" Style="display: none;" onchange="this.form.submit();" runat="server" Width="400px" />
+                    <asp:FileUpload ID="fluPicture" accept="image/jpeg,image/gif,image/png" Style="display: none;" onchange="this.form.submit();" runat="server" Width="400px" />
                     <div class="row">
                         <div class="col-lg-9">
                             <div class="input-group mb-3">
@@ -32,7 +32,8 @@
                             </button>
                         </div>
                     </div>
-                    <asp:CustomValidator ID="CustomValidator1" OnServerValidate="ValidateFileSize" ForeColor="Red" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
+                    <asp:CustomValidator ID="CustomValidator1" OnServerValidate="ValidateFileSize" ForeColor="Red" runat="server" ErrorMessage="CustomValidator1"></asp:CustomValidator>
+                    <asp:CustomValidator ID="CustomValidator2" OnServerValidate="ValidateFileExist" ForeColor="Red" runat="server" ErrorMessage="CustomValidator2"></asp:CustomValidator>
                 </div>
             </div>
         </div>

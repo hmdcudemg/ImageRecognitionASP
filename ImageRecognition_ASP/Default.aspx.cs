@@ -14,6 +14,8 @@ namespace ImageRecognition_ASP
 {
     public partial class _Default : Page
     {
+        bool validURL = true;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(txbURL.Text))
@@ -55,17 +57,26 @@ namespace ImageRecognition_ASP
 
         private void GetImageURL(Uri uri, string filename)
         {
-            using (WebClient webClient = new WebClient())
+            try
             {
-                webClient.DownloadFile(uri, Server.MapPath("/images/" + filename));
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile(uri, Server.MapPath("/images/" + filename));
+                }
+
+                imgPicture.ImageUrl = "~/images/" + filename;
+                Label1.Text = filename;
+
+                txbURL.Text = "";
+
+                Run("images/" + filename);
+                validURL = true;
             }
-
-            imgPicture.ImageUrl = "~/images/" + filename;
-            Label1.Text = filename;
-
-            txbURL.Text = "";
-
-            Run("images/" + filename);
+            catch (Exception)
+            {
+                validURL = false;
+                Page.Validate();
+            }
         }
 
         private void UpLoadAndDisplay()
@@ -92,6 +103,21 @@ namespace ImageRecognition_ASP
         protected void ValidateFileSize(object sender, ServerValidateEventArgs e)
         {
             e.IsValid = IsValidPath();
+        }
+
+        protected void ValidateFileExist(object sender, ServerValidateEventArgs e)
+        {
+            if (!validURL)
+            {
+                CustomValidator2.ErrorMessage = "The URL is not valid!.";
+                imgPicture.ImageUrl = "";
+                txbURL.Text = "";
+                jsonDetails.InnerText = "";
+                jsonOCR.InnerText = "";
+                Label1.Text = "";
+                Label2.Text = "";
+                e.IsValid = false;
+            }
         }
 
         private bool IsValidPath()
